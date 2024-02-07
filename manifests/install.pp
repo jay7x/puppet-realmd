@@ -46,7 +46,7 @@ class realmd::install {
       }
     }
     default: {
-      ensure_packages($::realmd::required_packages)
+      stdlib::ensure_packages($realmd::required_packages)
     }
   }
 
