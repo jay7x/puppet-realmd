@@ -30,7 +30,7 @@ on:
         description: "Run Acceptance job"
         type: boolean
         required: false
-        default: false
+        default: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -48,7 +48,7 @@ jobs:
       debug: ${{ github.events.inputs.debug == 'true' || contains(github.event.pull_request.labels.*.name, 'debug') }}
       matrix: ${{ needs.Matrix.outputs.spec_matrix }}
   Acceptance:
-    if: ${{ inputs.run_acceptance == true }}
+    if: ${{ github.event_name == 'pull_request' || inputs.run_acceptance == true }}
     needs: [ Matrix, Spec ]
     uses: ./.github/workflows/module_acceptance.yml
     secrets: inherit
