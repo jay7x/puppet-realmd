@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/walkamongus/realmd.svg?branch=master)](https://travis-ci.org/walkamongus/realmd)
+# Puppet Realmd
 
 #### Table of Contents
 
@@ -132,3 +132,9 @@ Set up Realmd, join an Active Directory domain via a keytab and fully configure 
         },
       },
     }
+
+## Acknowledgements
+
+This module was forked from [walkamongus-realmd] and _may not be compatible_.
+
+[walkamongus/realmd]: https://github.com/walkamongus/realmd]
