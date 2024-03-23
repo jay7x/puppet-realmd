@@ -76,65 +76,69 @@ It also optionally manages the contents of the Kerberos client configuration and
 
 Setup realmd and join an Active Directory domain via username and password:
 
-    class { '::realmd':
-      domain               => 'example.com',
-      domain_join_user     => 'user',
-      domain_join_password => 'password',
-    }
+```pp
+class { 'realmd':
+  domain               => 'example.com',
+  domain_join_user     => 'user',
+  domain_join_password => 'password',
+}
+```
 
 ### Joining with a prepared computer account
+
 1. Create the computer account by running adcli on *any* domain joined machine
-  * new computer account: `/usr/sbin/adcli preset-computer --domain example.com`
-  * or use an existing account: `/usr/sbin/adcli reset-computer --domain example.com`
+   * new computer account: `adcli preset-computer --domain example.com`
+   * or use an existing account: `adcli reset-computer --domain example.com`
 2. Configure the realmd class
+   ```pp
+   class { 'realmd':
+     domain             => $facts['networking']['domain'],
+     one_time_password  => 's3cure_pw', # optional, skip if you didn't specify it when running preset-computer
+     #do not set domain_join_user
+     #do not set krb_ticket_join
+   }
+   ```
 
-```
-    class { '::realmd':
-      domain             => $::domain,
-      one_time_password  => 's3cure_pw', #optional, skip if you didn't specify it when running preset-computer# 
-      #do not set domain_join_user
-      #do not set krb_ticket_join
-    }
-```
+#### Errors when running
 
-#### Errors when running wio
 1. `Error: adcli join ... returned 3 instead of one of [0]`
-
-The account hasn't been prepared properly or the password is wrong
+    The account hasn't been prepared properly or the password is wrong
 
 ## Usage
 
-Set up Realmd, join an Active Directory domain via a keytab and fully configure SSSD:
+### Setup Realmd, join an Active Directory domain via a keytab and fully configure SSSD:
 
-    class { '::realmd':
-      domain             => $::domain,
-      domain_join_user   => 'user',
-      krb_ticket_join    => true,
-      krb_keytab         => '/tmp/keytab',
-      manage_sssd_config => true,
-      sssd_config        => {
-        'sssd' => {
-          'domains'             => $::domain,
-          'config_file_version' => '2',
-          'services'            => 'nss,pam',
-        },
-        "domain/${::domain}" => {
-          'ad_domain'                      => $::domain,
-          'krb5_realm'                     => upcase($::domain),
-          'realmd_tags'                    => 'manages-system joined-with-adcli',
-          'cache_credentials'              => 'True',
-          'id_provider'                    => 'ad',
-          'access_provider'                => 'ad',
-          'krb5_store_password_if_offline' => 'True',
-          'default_shell'                  => '/bin/bash',
-          'ldap_id_mapping'                => 'True',
-          'fallback_homedir'               => '/home/%u',
-        },
-      },
-    }
+```pp
+class { 'realmd':
+  domain             => $facts['networking']['domain'],
+  domain_join_user   => 'user',
+  krb_ticket_join    => true,
+  krb_keytab         => '/tmp/keytab',
+  manage_sssd_config => true,
+  sssd_config        => {
+    'sssd' => {
+      'domains'             => $facts['networking']['domain'],
+      'config_file_version' => '2',
+      'services'            => 'nss,pam',
+    },
+    "domain/${facts['networking']['domain']}" => {
+      'ad_domain'                      => $facts['networking']['domain'],
+      'krb5_realm'                     => upcase($facts['networking']['domain']),
+      'realmd_tags'                    => 'manages-system joined-with-adcli',
+      'cache_credentials'              => 'True',
+      'id_provider'                    => 'ad',
+      'access_provider'                => 'ad',
+      'krb5_store_password_if_offline' => 'True',
+      'default_shell'                  => '/bin/bash',
+      'ldap_id_mapping'                => 'True',
+      'fallback_homedir'               => '/home/%u',
+    },
+  },
+}
+```
 
 ## Acknowledgements
 
 This module was forked from [walkamongus-realmd] and _may not be compatible_.
 
-[walkamongus/realmd]: https://github.com/walkamongus/realmd]
+[walkamongus-realmd]: https://github.com/walkamongus/realmd
