@@ -13,7 +13,7 @@ class realmd::join::password {
   if $realmd::computer_name != undef {
     $_computer_name = $realmd::computer_name
   } else {
-    $_computer_name = $::hostname[0,15]
+    $_computer_name = $facts['networking']['hostname'][0,15]
   }
 
   if $facts['os']['name'] == 'Ubuntu' {
