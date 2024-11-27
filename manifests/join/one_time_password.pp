@@ -15,7 +15,7 @@ class realmd::join::one_time_password {
 
   $_krb_config_final = deep_merge({ 'libdefaults' => { 'default_realm' => upcase($facts['networking']['domain']) } }, $_krb_config)
   if !$realmd::one_time_password {
-    $_password=$::hostname[0,15]
+    $_password=$facts['networking']['hostname'][0,15]
   }
   else {
     $_password=$realmd::one_time_password
@@ -39,7 +39,7 @@ class realmd::join::one_time_password {
     $_domain_args = ["--domain=${_domain}", "--user-principal=host/${_fqdn}@${_realm}",
     '--login-type=computer', "--computer-name=${_netbiosname}"]
   } else {
-    $_check_pricipal = $::hostname[0,15]
+    $_check_pricipal = $facts['networking']['hostname'][0,15]
     $_domain_args = ["--domain=${_domain}", "--user-principal=host/${_fqdn}@${_realm}", '--login-type=computer']
   }
 
