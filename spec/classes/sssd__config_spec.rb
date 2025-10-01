@@ -50,6 +50,20 @@ describe 'realmd' do
               )
           end
         end
+
+        context 'realmd::sssd::config class with custom config file & mode' do
+          let(:params) do
+            {
+              manage_sssd_config: true,
+              sssd_config: { test: true },
+              sssd_config_file: '/target/etc/sssd/sssd.conf',
+              sssd_config_file_mode: '0640',
+            }
+          end
+
+          it { is_expected.not_to contain_file('/etc/sssd/sssd.conf') }
+          it { is_expected.to contain_file('/target/etc/sssd/sssd.conf').with_mode('0640') }
+        end
       end
     end
   end

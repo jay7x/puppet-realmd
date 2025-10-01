@@ -28,6 +28,8 @@
 # @param sssd_service_ensure
 # @param sssd_config_file
 #   The absolute path of the SSSD configuration file
+# @param sssd_config_file_mode
+#   A file mode to set on the SSSD configuration file
 # @param sssd_config_cache_file
 # @param sssd_config
 #   A hash of configuration options structured in an ini-style format
@@ -88,6 +90,7 @@ class realmd (
   String $sssd_service_name,
   String $sssd_service_ensure,
   Stdlib::Absolutepath $sssd_config_file,
+  Stdlib::Filemode $sssd_config_file_mode,
   Stdlib::Absolutepath $sssd_config_cache_file,
   Hash $sssd_config,
   Boolean $manage_sssd_config,
