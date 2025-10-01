@@ -10,7 +10,7 @@ class realmd::sssd::config {
       content => template('realmd/sssd.conf.erb'),
       owner   => 'root',
       group   => 'root',
-      mode    => '0600',
+      mode    => $realmd::sssd_config_file_mode,
       notify  => Exec['force_config_cache_rebuild'],
     }
 
