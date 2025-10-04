@@ -43,6 +43,7 @@ The following parameters are available in the `realmd` class:
 * [`sssd_service_name`](#-realmd--sssd_service_name)
 * [`sssd_service_ensure`](#-realmd--sssd_service_ensure)
 * [`sssd_config_file`](#-realmd--sssd_config_file)
+* [`sssd_config_file_mode`](#-realmd--sssd_config_file_mode)
 * [`sssd_config_cache_file`](#-realmd--sssd_config_cache_file)
 * [`sssd_config`](#-realmd--sssd_config)
 * [`manage_sssd_config`](#-realmd--manage_sssd_config)
@@ -149,6 +150,12 @@ Data type: `String`
 Data type: `Stdlib::Absolutepath`
 
 The absolute path of the SSSD configuration file
+
+##### <a name="-realmd--sssd_config_file_mode"></a>`sssd_config_file_mode`
+
+Data type: `Stdlib::Filemode`
+
+A file mode to set on the SSSD configuration file
 
 ##### <a name="-realmd--sssd_config_cache_file"></a>`sssd_config_cache_file`
 
